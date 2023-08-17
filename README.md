@@ -1,6 +1,6 @@
-# live Ecommerce-app click on flowing link
+# see live demo Ecommerce-app click on flowing link
 
-https://mandal-ecommerce-app.netlify.app
+[Shoping Mart Ecommerce](https://mandal-ecommerce-app.netlify.app)
 
 # Getting Started with Create React App
 
