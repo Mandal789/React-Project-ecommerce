@@ -12,8 +12,13 @@ const Allproducts = () => {
 
   const [products, setproducts] = useState([]);
   const [filter, setfilter] = useState(products);
+  const [filter2, setfilter2] = useState(products);
+  const [filter3, setfilter3] = useState(products);
   const [loading, setloading] = useState(false);
-  let componentMounted = true;
+  const [search, setsearch] = useState([]);
+  const [btnstyle, setbtnstyle] = useState("");
+  const [Rbtnstyle, setRbtnstyle] = useState("");
+  //let componentMounted = true;
   useEffect(() => {
     const fetchProducts = async () => {
       setloading(true);
@@ -22,20 +27,22 @@ const Allproducts = () => {
         const data = await response.clone().json();
         console.log(response.status);
         if (response.status === 502) {
-          navigate("/badrequest");
+           navigate("/badrequest");
         }
         setfilter(await response.json());
+        setfilter2(data);
+        setfilter3(data);
         setproducts(data);
         setloading(false);
       } catch (error) {
         console.log(error.status);
-        navigate("/error");
+         navigate("/error")
       }
-      if (componentMounted) {
-      }
-      return () => {
-        componentMounted = false;
-      };
+      // if (componentMounted) {
+      // }
+      // return () => {
+      //   componentMounted = false;
+      // };
     };
     fetchProducts();
   }, []);
@@ -88,21 +95,41 @@ const Allproducts = () => {
     );
   };
 
+  const Allproduct = () => {
+    setfilter(products);
+    setfilter2(products);
+    setfilter3(products);
+    setsearch("");
+    setbtnstyle("");
+    setRbtnstyle("");
+  };
+
   const filterProducts = (cat) => {
     const filtered = products.filter((product) => product.category === cat);
+
     setfilter(filtered);
+    setfilter2(filtered);
+    setfilter3(filtered);
+    setbtnstyle("");
+    setRbtnstyle("");
+
+    cat === "women's clothing" ? setsearch("wo") : setsearch(cat);
   };
-  const filterProductsprice = (low, high) => {
-    const filtered = products.filter((item) => {
+  const filterProductsprice = (low, high, code) => {
+    const filtered = filter2.filter((item) => {
       return item.price >= low && item.price <= high;
     });
     setfilter(filtered);
+    setfilter3(filtered);
+    setbtnstyle(code);
+    setRbtnstyle("");
   };
-  const filterProductsRating = (low, high) => {
-    const filtered = filter.filter((item) => {
+  const filterProductsRating = (low, high, code) => {
+    const filtered = filter3.filter((item) => {
       return item.rating.rate >= low && item.rating.rate <= high;
     });
     setfilter(filtered);
+    setRbtnstyle(code);
   };
 
   const ShowProducts = () => {
@@ -163,38 +190,48 @@ const Allproducts = () => {
               Filter Products
             </div>
             <button
-              className="ml-5  focus:bg-violet-700 bg-gray-300 mt-2 py-1 px-10 text-black shadow-sm hover:bg-sky-400 border rounded-2xl border-1"
-              onClick={() => filterProductsprice(1, 100)}
+              onClick={() => filterProductsprice(1, 100, "A")}
+              className={`ml-5 bg-gray-300 mt-2 py-1 px-9 text-black shadow-sm hover:bg-sky-400 border rounded-2xl border-1 ${
+                btnstyle.includes("A") ? "act" : null
+              }`}
             >
-              Price-1 to 50
+              Price-1 to 100
             </button>
             <br />
             <button
-              className="  ml-5 mt-2 focus:bg-violet-700 bg-gray-300 py-1 px-7 text-black shadow-sm hover:bg-sky-400 border rounded-2xl border-1"
-              onClick={() => filterProductsprice(100, 500)}
+              className={`  ml-5 mt-2 focus:bg-violet-700 bg-gray-300 py-1 px-7 text-black shadow-sm hover:bg-sky-400 border rounded-2xl border-1 ${
+                btnstyle.includes("B") ? "act" : null
+              }`}
+              onClick={() => filterProductsprice(100, 500, "B")}
             >
               Price-100 to 500
             </button>
             <br />
             <button
-              className="ml-5 py-1 focus:bg-violet-700 bg-gray-300 mt-2 px-4 text-black shadow-sm hover:bg-sky-400 border rounded-2xl border-1"
-              onClick={() => filterProductsprice(500, 1000)}
+              className={`ml-5 py-1 focus:bg-violet-700 bg-gray-300 mt-2 px-4 text-black shadow-sm hover:bg-sky-400 border rounded-2xl border-1 ${
+                btnstyle.includes("C") ? "act" : null
+              }`}
+              onClick={() => filterProductsprice(500, 1000, "C")}
             >
               Price-500 to 1000
             </button>
             <br />
             <button
-              className="ml-5 mt-2 focus:bg-violet-700 bg-gray-300 py-1 px-8 text-black shadow-sm hover:bg-sky-400 border rounded-2xl border-1"
-              onClick={() => filterProductsRating(2, 3.5)}
+              className={`ml-5 mt-2 focus:bg-violet-700 bg-gray-300 py-1 px-8 text-black shadow-sm hover:bg-sky-400 border rounded-2xl border-1 ${
+                Rbtnstyle.includes("D") ? "act" : null
+              }`}
+              onClick={() => filterProductsRating(2, 3.5, "D")}
             >
               Rating-2 to 3.5
             </button>
             <br />
             <button
-              className="ml-5 mt-2 focus:bg-violet-700 bg-gray-300 py-1 px-8 text-black shadow-sm hover:bg-sky-400 border rounded-2xl border-1"
-              onClick={() => filterProductsRating(3, 4.5)}
+              className={`ml-5 mt-2 focus:bg-violet-700 bg-gray-300 py-1 px-10 text-black shadow-sm hover:bg-sky-400 border rounded-2xl border-1 ${
+                Rbtnstyle.includes("E") ? "act" : null
+              }`}
+              onClick={() => filterProductsRating(3, 5, "E")}
             >
-              Rating-3 to 4.5
+              Rating-3 to 5
             </button>
           </div>
 
@@ -208,36 +245,44 @@ const Allproducts = () => {
           </div>
         </section>
 
-        <div className=" category flex justify-center ml-60 mr-28">
+        <div className=" category flex justify-center ml-64 mr-28">
           <button
-            className=" width flex curser text-white bg-purple-500 border-0 py-2 px-6 focus:outline-none hover:bg-purple-600 rounded"
-            onClick={() => setfilter(products)}
+            className=" width flex curser text-white bg-purple-500 border-0 py-2 px-12 focus:outline-none hover:bg-purple-600 rounded"
+            onClick={() => Allproduct()}
           >
             All
           </button>
 
           <button
-            className=" width flex ml-auto text-white bg-purple-500 border-0 py-2 px-6 focus:outline-none hover:bg-purple-600 rounded"
             onClick={() => filterProducts("women's clothing")}
+            className={` width flex ml-auto text-white bg-purple-500 border-0 py-2 px-6  hover:bg-purple-600 rounded ${
+              search.includes("wo") ? "act" : null
+            } `}
           >
             Women's Clothing
           </button>
 
           <button
-            className=" width flex ml-auto text-white bg-purple-500 border-0 py-2 px-6 focus:outline-none hover:bg-purple-600 rounded"
             onClick={() => filterProducts("men's clothing")}
+            className={` width flex ml-auto text-white bg-purple-500 border-0 py-2 px-6 focus:outline-none hover:bg-purple-600 rounded ${
+              search.includes("men") ? "act" : null
+            } ${console.log(btnstyle)}`}
           >
             Men's Clothing
           </button>
 
           <button
-            className=" width flex ml-auto text-white bg-purple-500 border-0 py-2 px-6 focus:outline-none hover:bg-purple-600 rounded"
+            className={`width flex ml-auto text-white bg-purple-500 border-0 py-2 px-6 focus:outline-none hover:bg-purple-600 rounded ${
+              search.includes("jewelery") ? "act" : ""
+            }`}
             onClick={() => filterProducts("jewelery")}
           >
             Jewelery
           </button>
           <button
-            className=" width flex ml-auto text-white bg-purple-500 border-0 py-2 px-6 focus:outline-none hover:bg-purple-600 rounded"
+            className={`width flex ml-auto text-white bg-purple-500 border-0 py-2 px-6 focus:outline-none hover:bg-purple-600 rounded ${
+              search.includes("electronics") ? "act" : ""
+            }`}
             onClick={() => filterProducts("electronics")}
           >
             Electronics
@@ -251,6 +296,7 @@ const Allproducts = () => {
                 const { id, title, price, category, image, rating } = item;
                 return (
                   <React.Fragment key={id}>
+                    {}
                     <div className="lg:w-[23%] md:w-1/2 p-2 w-full  mb-4  rounded-lg shadow ml-4 ">
                       <NavLink to={`/products/${id}`}>
                         <p className="block relative h-48 rounded overflow-hidden cursor-pointer">
@@ -259,7 +305,7 @@ const Allproducts = () => {
                             className="object-contain object-center w-full h-full block"
                             src={image}
                           />
-                          <span className="relative bg-sky-300 text-black shadow-lg left-[72%] py-1 px-3 border rounded-2xl border-1 bottom-[98%]">
+                          <span className="relative bg-sky-300 text-black shadow-md left-[72%] py-1 px-3 border rounded-2xl border-1 bottom-[98%]">
                             {rating.rate}/5
                           </span>
                         </p>

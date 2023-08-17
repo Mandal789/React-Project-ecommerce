@@ -83,3 +83,12 @@
         height: 90vh;
     }
 }
+
+.act {
+    background-color: rgb(2, 233, 245);
+    color: rgb(9, 7, 7)!important;
+}
+
+.act:hover {
+    background-color: rgb(2, 225, 245);
+}
